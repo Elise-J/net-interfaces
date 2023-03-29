@@ -26,7 +26,7 @@ class TestZMQNetworkInterface(unittest.TestCase):
         cls.robot_jacobian = sr.Jacobian().Random("robot", 3, "frame")
         cls.robot_mass = sr.Parameter("mass", np.random.rand(3, 3), sr.ParameterType.MATRIX)
         cls.robot_external_wrench = sr.CartesianWrench().Random("ee", "robot")
-        cls.robot_external_torque = sr.Parameter("external_torque", np.random.rand(3, 1), sr.ParameterType.VECTOR)
+        cls.robot_external_torque = sr.Parameter("external_torque", np.random.rand(7, 1), sr.ParameterType.VECTOR)
         cls.control_command = sr.JointState().Random("robot", 3)
         cls.control_type = [1, 2, 3]
         cls.context = zmq.Context()

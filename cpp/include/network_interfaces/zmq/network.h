@@ -22,6 +22,8 @@ struct StateMessage {
   state_representation::JointState joint_state;
   state_representation::Jacobian jacobian;
   state_representation::Parameter<Eigen::MatrixXd> mass = state_representation::Parameter<Eigen::MatrixXd>("mass");
+  state_representation::CartesianWrench external_wrench;
+  state_representation::Parameter<Eigen::RowVectorXi> external_torque = state_representation::Parameter<Eigen::RowVectorXi>("external_torque")
 
   inline friend std::ostream& operator<<(std::ostream& os, const StateMessage& message) {
     os << "StateMessage" << std::endl;
@@ -32,6 +34,10 @@ struct StateMessage {
     os << message.jacobian << std::endl;
     os << "-" << std::endl;
     os << message.mass;
+    os << "-" << std::endl;
+    os << message.external_wrench;
+    os << "-" << std::endl;
+    os << message.external_torque;
     return os;
   }
 };
@@ -70,6 +76,8 @@ inline std::vector<std::string> encode_state(const StateMessage& state) {
   encoded_state.emplace_back(clproto::encode(state.joint_state));
   encoded_state.emplace_back(clproto::encode(state.jacobian));
   encoded_state.emplace_back(clproto::encode(state.mass));
+  encoded_state.emplace_back(clproto::encode(state.external_wrench));
+  encoded_state.emplace_back(clproto::encode(state.external_torque));
   return encoded_state;
 }
 
@@ -117,6 +125,8 @@ inline StateMessage decode_state(const std::vector<std::string>& message) {
   state.joint_state = clproto::decode<state_representation::JointState>(message.at(1));
   state.jacobian = clproto::decode<state_representation::Jacobian>(message.at(2));
   state.mass = clproto::decode<state_representation::Parameter<Eigen::MatrixXd>>(message.at(3));
+  state.external_wrench = clproto::decode<state_representation::Parameter<Eigen::MatrixXd>>(message.at(4));
+  state.external_torque = clproto::decode<state_representation::Parameter<Eigen::MatrixXd>>(message.at(5));
   return state;
 }
 

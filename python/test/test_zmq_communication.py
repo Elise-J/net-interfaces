@@ -25,6 +25,8 @@ class TestZMQNetworkInterface(unittest.TestCase):
         cls.robot_joint_state = sr.JointState().Random("robot", 3)
         cls.robot_jacobian = sr.Jacobian().Random("robot", 3, "frame")
         cls.robot_mass = sr.Parameter("mass", np.random.rand(3, 3), sr.ParameterType.MATRIX)
+        cls.robot_external_wrench = sr.CartesianWrench().Random("ee", "robot")
+        cls.robot_external_torque = sr.Parameter("external_torque", np.random.rand(3, 1), sr.ParameterType.VECTOR)
         cls.control_command = sr.JointState().Random("robot", 3)
         cls.control_type = [1, 2, 3]
         cls.context = zmq.Context()
@@ -37,7 +39,7 @@ class TestZMQNetworkInterface(unittest.TestCase):
         command_subscriber, state_publisher = network.configure_sockets(self.context, "127.0.0.1:1702",
                                                                         "127.0.0.1:1701")
 
-        state = network.StateMessage(self.robot_state, self.robot_joint_state, self.robot_jacobian, self.robot_mass)
+        state = network.StateMessage(self.robot_state, self.robot_joint_state, self.robot_jacobian, self.robot_mass, self.robot_external_wrench, self.robot_external_torque)
         command = []
         start_time = time.time()
         while time.time() - start_time < 2.:
@@ -77,6 +79,9 @@ class TestZMQNetworkInterface(unittest.TestCase):
         self.assert_state_equal(self.received_state.jacobian, self.robot_jacobian)
         self.assertFalse(self.received_state.mass.is_incompatible(self.robot_mass))
         assert_array_almost_equal(self.received_state.mass.get_value(), self.robot_mass.get_value())
+        self.assert_state_equal(self.received_state.external_wrench, self.robot_external_wrench)
+        self.assertFalse(self.received_state.external_torque.is_incompatible(self.robot_external_torque))
+        assert_array_almost_equal(self.received_state.external_torque.get_value(), self.robot_external_torque.get_value())
 
     def test_encode_command(self):
         command = network.CommandMessage([], sr.JointState())

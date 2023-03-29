@@ -17,17 +17,24 @@ class StateMessage:
     joint_state: sr.JointState
     jacobian: sr.Jacobian
     mass: sr.Parameter("mass", sr.ParameterType.MATRIX)
+    external_wrench : sr.CartesianWrench
+    external_torque: sr.Parameter("external_torque", sr.ParameterType.VECTOR)
 
     def __init__(self, ee_state=sr.CartesianState(), joint_state=sr.JointState(), jacobian=sr.Jacobian(),
-                 mass=sr.Parameter("mass", sr.ParameterType.MATRIX)):
+                 mass=sr.Parameter("mass", sr.ParameterType.MATRIX), external_wrench=sr.CartesianWrench,
+                 external_torque=sr.Parameter("external_torque", sr.ParameterType.VECTOR)):
         assert isinstance(ee_state, sr.CartesianState)
         assert isinstance(joint_state, sr.JointState)
         assert isinstance(jacobian, sr.Jacobian)
         assert isinstance(mass, sr.Parameter)
+        assert isinstance(external_wrench, sr.CartesianWrench)
+        assert isinstance(external_torque, sr.Parameter)
         self.ee_state = ee_state
         self.joint_state = joint_state
         self.jacobian = jacobian
         self.mass = mass
+        self.external_wrench = external_wrench
+        self.external_torque = external_torque
 
 
 @dataclass
@@ -62,6 +69,8 @@ def encode_state(state):
     encoded_state.append(clproto.encode(state.joint_state, clproto.MessageType.JOINT_STATE_MESSAGE))
     encoded_state.append(clproto.encode(state.jacobian, clproto.MessageType.JACOBIAN_MESSAGE))
     encoded_state.append(clproto.encode(state.mass, clproto.MessageType.PARAMETER_MESSAGE))
+    encoded_state.append(clproto.encode(state.external_wrench, clproto.MessageType.CARTESIAN_WRENCH_MESSAGE))
+    encoded_state.append(clproto.encode(state.external_torque, clproto.MessageType.PARAMETER_MESSAGE))
     return encoded_state
 
 
@@ -100,7 +109,7 @@ def decode_state(message):
     :rtype: StateMessage
     """
     state = StateMessage(clproto.decode(message[0]), clproto.decode(message[1]), clproto.decode(message[2]),
-                         clproto.decode(message[3]))
+                         clproto.decode(message[3]), clproto.decode(message[4]), clproto.decode(message[5]))
     return state
 
 

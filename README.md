@@ -2,6 +2,11 @@
 
 A repository of drivers, protocols and libraries for communicating between software and hardware devices.
 
+## License
+
+The code is from https://github.com/aica-technology/network-interfaces 
+
+
 ## Installation and usage
 
 This project depends on the `state_representation` and `clproto` libraries from

@@ -25,6 +25,8 @@ public:
     robot_joint_state = state_representation::JointState::Random("robot", 3);
     robot_jacobian = state_representation::Jacobian::Random("robot", 3, "frame");
     robot_mass.set_value(Eigen::MatrixXd::Random(3, 3));
+    robot_external_wrench = state_representation::CartesianWrench::Random("ee", "robot");
+    robot_external_torque.set_value(Eigen::MatrixXd::Random(7, 1));
     control_joint_state = state_representation::JointState::Random("robot", 3);
     control_type = std::vector<int>{1, 2, 3};
   }
@@ -33,7 +35,10 @@ public:
   state_representation::JointState robot_joint_state;
   state_representation::Jacobian robot_jacobian;
   state_representation::Parameter<Eigen::MatrixXd>
-      robot_mass = state_representation::Parameter<Eigen::MatrixXd>("robot");
+  robot_mass = state_representation::Parameter<Eigen::MatrixXd>("robot");
+  state_representation::CartesianWrench robot_external_wrench;
+  state_representation::Parameter<Eigen::MatrixXd>
+  robot_external_torque = state_representation::Parameter<Eigen::MatrixXd>("robot");
   state_representation::JointState control_joint_state;
   std::vector<int> control_type;
 
@@ -54,6 +59,8 @@ public:
     state.joint_state = robot_joint_state;
     state.jacobian = robot_jacobian;
     state.mass = robot_mass;
+    state.external_wrench = robot_external_wrench;
+    state.external_torque = robot_external_torque;
     for (std::size_t i = 0; i < 100; ++i) {
       network_interfaces::zmq::send(state, state_publisher);
       network_interfaces::zmq::receive(command, command_subscriber);
@@ -91,6 +98,13 @@ public:
     EXPECT_FALSE(state.jacobian.is_incompatible(robot_jacobian));
     EXPECT_TRUE(state.mass.get_value().isApprox(robot_mass.get_value()));
     EXPECT_FALSE(state.mass.is_incompatible(robot_mass));
+
+
+    EXPECT_TRUE(state.external_wrench.data().isApprox(robot_external_wrench.data()));
+    EXPECT_FALSE(state.external_wrench.is_incompatible(robot_external_wrench));
+
+    EXPECT_TRUE(state.external_torque.get_value().isApprox(robot_external_torque.get_value()));
+    EXPECT_FALSE(state.external_torque.is_incompatible(robot_external_torque));
   }
 };
 

@@ -2,17 +2,10 @@
 
 Release Versions:
 
-- [1.2.0](#120)
 - [1.1.0](#110)
 - [1.0.0](#100)
 - [0.2.0](#020)
 - [0.1.0](#010)
-
-## 1.2.0
-
-Version 1.2.0 is an update to support the latest release of
-[aica-technology/control-libraries version 7.0](https://github.com/aica-technology/control-libraries/releases/tag/v7.0.0).
-The only new feature is a pair of configuration files that lets `pkg-config` find the C++ library if it's installed.
 
 ## 1.1.0
 

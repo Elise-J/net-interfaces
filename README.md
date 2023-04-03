@@ -1,4 +1,4 @@
-# network-interfaces
+# network-interfaces v1.1.0
 
 A repository of drivers, protocols and libraries for communicating between software and hardware devices.
 

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-
-set (NETWORK_INTERFACES_VERSION 1.2.0)
-project(network_interfaces VERSION ${NETWORK_INTERFACES_VERSION})
+project(network_interfaces VERSION 1.1.0)
 
 option(BUILD_TESTING "Build tests." OFF)
 
@@ -25,22 +23,12 @@ else()
     find_package(GTest QUIET)
 endif()
 
-macro(add_project_dependency)
- find_package(${ARGV})
- if(PKG_EXTERNAL_DEPS)
-   set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS}, ${ARGV0} >= ${ARGV1}")
- else()
-   set(PKG_EXTERNAL_DEPS "${ARGV0} >= ${ARGV1}")
- endif()
-endmacro()
-
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-include(FindPkgConfig)
 
-add_project_dependency(control_libraries 7.0.0 REQUIRED COMPONENTS state_representation)
-add_project_dependency(clproto 7.0.0 REQUIRED)
-add_project_dependency(cppzmq 4.7.1 REQUIRED)
+find_package(control_libraries 6.0.0 REQUIRED COMPONENTS state_representation)
+find_package(clproto 6.0.0 REQUIRED)
+find_package(cppzmq 4.7.1 REQUIRED)
 
 include_directories(include)
 
@@ -72,7 +60,7 @@ write_basic_package_version_file(
 )
 
 # create config file
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/network_interfaces-config.cmake.in
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
@@ -83,14 +71,3 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
-
-if(${PKG_CONFIG_FOUND})
-  set(PKG_NAME ${PROJECT_NAME})
-  set(PKG_DESC "Network Interfaces")
-  set(pkg_conf_file "network_interfaces.pc")
-  configure_file("${pkg_conf_file}.in" "${CMAKE_BINARY_DIR}/${pkg_conf_file}" @ONLY)
-  install(FILES "${CMAKE_BINARY_DIR}/${pkg_conf_file}"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/ COMPONENT pkgconfig)
-else()
-  message(WARNING "Could not find pkg-config executable, skipping generation of pkg-config files.")
-endif()

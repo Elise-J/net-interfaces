@@ -1,5 +1,5 @@
 #!/bin/bash
-CONTROL_LIBRARIES_BRANCH=v7.0.0
+CONTROL_LIBRARIES_BRANCH=v6.0.0
 REMOTE_SSH_PORT=4420
 
 IMAGE_NAME=aica-technology/elise-j/net-interfaces

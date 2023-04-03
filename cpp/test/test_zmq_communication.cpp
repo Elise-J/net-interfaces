@@ -8,14 +8,14 @@
 static void
 expect_joint_state_equal(const state_representation::JointState& js1, const state_representation::JointState& js2) {
   EXPECT_TRUE(js1.data().isApprox(js2.data()));
-  EXPECT_FALSE(js1.is_incompatible(js2));
+  EXPECT_TRUE(js1.is_compatible(js2));
 }
 
 static void expect_cart_state_equal(
     const state_representation::CartesianState& cs1, const state_representation::CartesianState& cs2
 ) {
   EXPECT_TRUE(cs1.data().isApprox(cs2.data()));
-  EXPECT_FALSE(cs1.is_incompatible(cs2));
+  EXPECT_TRUE(cs1.is_compatible(cs2));
 }
 
 class TestNetworkInterface : public ::testing::Test {
@@ -95,16 +95,16 @@ public:
     expect_cart_state_equal(state.ee_state, robot_state);
     expect_joint_state_equal(state.joint_state, robot_joint_state);
     EXPECT_TRUE(state.jacobian.data().isApprox(robot_jacobian.data()));
-    EXPECT_FALSE(state.jacobian.is_incompatible(robot_jacobian));
+    EXPECT_TRUE(state.jacobian.is_compatible(robot_jacobian));
     EXPECT_TRUE(state.mass.get_value().isApprox(robot_mass.get_value()));
-    EXPECT_FALSE(state.mass.is_incompatible(robot_mass));
+    EXPECT_TRUE(state.mass.is_compatible(robot_mass));
 
 
     EXPECT_TRUE(state.external_wrench.data().isApprox(robot_external_wrench.data()));
-    EXPECT_FALSE(state.external_wrench.is_incompatible(robot_external_wrench));
+    EXPECT_TRUE(state.external_wrench.is_compatible(robot_external_wrench));
 
     EXPECT_TRUE(state.external_torque.get_value().isApprox(robot_external_torque.get_value()));
-    EXPECT_FALSE(state.external_torque.is_incompatible(robot_external_torque));
+    EXPECT_TRUE(state.external_torque.is_compatible(robot_external_torque));
   }
 };
 

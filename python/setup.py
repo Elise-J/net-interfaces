@@ -2,14 +2,14 @@ import setuptools
 
 setuptools.setup(
     name="network_interfaces",
-    version="1.2.0",
+    version="1.1.0",
     description="This package implements network interfaces of AICA",
     maintainer="Dominic Reber",
     maintainer_email="dominic@aica.tech",
     url="https://github.com/aica-technology/network-interfaces",
     packages=setuptools.find_packages(),
     install_requires=[
-        "control-libraries>=7.0.0",
+        "control-libraries>=6.0.0",
         "pyzmq>=22.3"
     ],
     classifiers=[

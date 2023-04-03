@@ -32,7 +32,7 @@ class TestZMQNetworkInterface(unittest.TestCase):
         cls.context = zmq.Context()
 
     def assert_state_equal(self, state1, state2):
-        self.assertFalse(state1.is_incompatible(state2))
+        self.assertTrue(state1.is_compatible(state2))
         assert_array_almost_equal(state1.data(), state2.data())
 
     def robot(self):
@@ -77,10 +77,10 @@ class TestZMQNetworkInterface(unittest.TestCase):
         self.assert_state_equal(self.received_state.ee_state, self.robot_state)
         self.assert_state_equal(self.received_state.joint_state, self.robot_joint_state)
         self.assert_state_equal(self.received_state.jacobian, self.robot_jacobian)
-        self.assertFalse(self.received_state.mass.is_incompatible(self.robot_mass))
+        self.assertTrue(self.received_state.mass.is_compatible(self.robot_mass))
         assert_array_almost_equal(self.received_state.mass.get_value(), self.robot_mass.get_value())
         self.assert_state_equal(self.received_state.external_wrench, self.robot_external_wrench)
-        self.assertFalse(self.received_state.external_torque.is_incompatible(self.robot_external_torque))
+        self.assertTrue(self.received_state.external_torque.is_compatible(self.robot_external_torque))
         assert_array_almost_equal(self.received_state.external_torque.get_value(), self.robot_external_torque.get_value())
 
     def test_encode_command(self):

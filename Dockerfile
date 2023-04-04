@@ -42,7 +42,7 @@ RUN pip3 install pyzmq
 # RUN cd ./network_interfaces/python && pip3 install ./ && python3 -m unittest discover ./test --verbose
 
 WORKDIR ${HOME}
-RUN git clone https://github.com/Elise-J/net-interfaces
+RUN git clone --branch v1.1.0 https://github.com/Elise-J/net-interfaces
 WORKDIR ${HOME}/net-interfaces/cpp
 RUN mkdir build 
 WORKDIR ${HOME}/net-interfaces/cpp/build 

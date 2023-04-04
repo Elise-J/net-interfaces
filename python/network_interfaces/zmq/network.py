@@ -21,7 +21,7 @@ class StateMessage:
     external_torque: sr.Parameter("external_torque", sr.ParameterType.VECTOR)
 
     def __init__(self, ee_state=sr.CartesianState(), joint_state=sr.JointState(), jacobian=sr.Jacobian(),
-                 mass=sr.Parameter("mass", sr.ParameterType.MATRIX), external_wrench=sr.CartesianWrench,
+                 mass=sr.Parameter("mass", sr.ParameterType.MATRIX), external_wrench=sr.CartesianWrench(),
                  external_torque=sr.Parameter("external_torque", sr.ParameterType.VECTOR)):
         assert isinstance(ee_state, sr.CartesianState)
         assert isinstance(joint_state, sr.JointState)
